@@ -20,7 +20,7 @@ resource "docker_container" "registry" {
     host_path      = "${var.install_root}/registry/registry"
   }
   networks_advanced {
-    name    = docker_network.iv_buildsystem_network.name
+    name    = data.docker_network.organize_me.name
     aliases = ["registry"]
   }
 

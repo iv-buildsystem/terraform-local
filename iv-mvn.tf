@@ -2,13 +2,12 @@ resource "mysql_database" "mvn" {
   default_character_set = "utf8mb3"
   default_collation     = "utf8mb3_general_ci"
   name = "mvn"
-  depends_on = [docker_container.mysql]
 }
 
 resource "mysql_user" "mvn" {
   user               = var.mvn_db_username
   plaintext_password = var.mvn_db_password
-  host               = "iv-buildsystem-mvn.iv-buildsystem"
+  host               = "iv-buildsystem-mvn.${data.docker_network.organize_me.name}"
   depends_on = [mysql_database.mvn]
 }
 
@@ -38,11 +37,11 @@ resource "docker_container" "mvn" {
     "DATASOURCE_URL=jdbc:mysql://mysql:3306/mvn?allowPublicKeyRetrieval=true",
     "DATASOURCE_USERNAME=${var.mvn_db_username}",
     "DATASOURCE_PASSWORD=${var.mvn_db_password}",
-    "OAUTH2_ISSUER=http://keycloak.${var.hostname}/realms/build",
+    "OAUTH2_ISSUER=https://auth.vanderelst.house/auth/realms/build",
     "OAUTH2_ADMINS=admin@domain.com"
   ]
   networks_advanced {
-    name    = docker_network.iv_buildsystem_network.name
+    name    = data.docker_network.organize_me.name
     aliases = ["mvn"]
   }
 #  ports {
@@ -55,6 +54,6 @@ resource "docker_container" "mvn" {
     value = "iv-buildsystem"
   }
   
-  depends_on = [mysql_grant.mvn, docker_container.keycloak]
+  depends_on = [mysql_grant.mvn, keycloak_realm.build]
 }
 

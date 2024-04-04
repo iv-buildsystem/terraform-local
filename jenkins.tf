@@ -31,7 +31,7 @@ resource "docker_container" "jenkins" {
     host_path      = "${var.jenkins_docker_socket}"
   }
   networks_advanced {
-    name    = docker_network.iv_buildsystem_network.name
+    name    = data.docker_network.organize_me.name
     aliases = ["jenkins"]
   }
 

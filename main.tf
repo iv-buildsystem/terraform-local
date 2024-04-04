@@ -8,20 +8,23 @@ terraform {
       source  = "bangau1/mysql"
       version = "= 1.10.4"
     }
+    keycloak = {
+      source = "mrparkers/keycloak"
+      version = "4.4.0"
+    }
   }
+}
+
+provider "keycloak" {
+    client_id     = "admin-cli"
+    username      = "ivadmin"
+    password      = "6+mP[+5cheWC~gyV"
+    url           = "http://localhost:8080/auth"
 }
 
 provider "docker" {
-  host = "unix:///home/isaiah/.docker/desktop/docker.sock"
 }
 
-resource "docker_network" "iv_buildsystem_network" {
-  name   = "iv-buildsystem"
-  driver = "bridge"
-
-  ipam_config {
-    aux_address = {}
-    gateway     = "172.22.0.1"
-    subnet      = "172.22.0.0/16"
-  }
+data "docker_network" "organize_me" {
+  name = "organize_me_network"
 }
