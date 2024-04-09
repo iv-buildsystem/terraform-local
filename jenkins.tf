@@ -1,5 +1,5 @@
 resource "docker_image" "jenkins" {
-  name         = "jenkins/jenkins:2.440.2-lts"
+  name         = "ivcode/jenkins:4.5.2024"
   keep_locally = true
 }
 
@@ -43,25 +43,5 @@ resource "docker_container" "jenkins" {
   labels {
     label = "project"
     value = "iv-buildsystem"
-  }
-  
-  # install the docker-cli
-  provisioner "local-exec" {
-    interpreter = ["docker", "container", "exec", docker_container.jenkins.name, "/bin/bash", "-c"]
-    command = <<-EOT
-     apt-get update
-     apt-get install ca-certificates curl gnupg
-     install -m 0755 -d /etc/apt/keyrings
-     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-     chmod a+r /etc/apt/keyrings/docker.gpg
-     
-     echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo bookworm) stable" | \
-      tee /etc/apt/sources.list.d/docker.list > /dev/null
-      
-     apt-get update
-     apt-get -y install docker-ce-cli=${var.jenkins_docker_cli_version}
-    EOT
   }
 }

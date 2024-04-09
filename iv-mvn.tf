@@ -38,7 +38,7 @@ resource "docker_container" "mvn" {
     "DATASOURCE_USERNAME=${var.mvn_db_username}",
     "DATASOURCE_PASSWORD=${var.mvn_db_password}",
     "OAUTH2_ISSUER=https://auth.vanderelst.house/auth/realms/build",
-    "OAUTH2_ADMINS=admin@domain.com"
+    "OAUTH2_ADMINS=isaiah.v@comcast.net"
   ]
   networks_advanced {
     name    = data.docker_network.organize_me.name
